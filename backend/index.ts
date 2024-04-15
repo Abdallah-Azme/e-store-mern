@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.route";
 import { error } from "./middlewares/error";
 import { notFound } from "./middlewares/notFound";
+import { serializeUser } from "./middlewares/serialize.user";
 config();
 
 const app = express();
@@ -12,6 +13,9 @@ const app = express();
 //packages
 app.use(express.json());
 app.use(cookieParser());
+
+//middlewares
+app.use(serializeUser);
 
 app.use("/api/users", userRoutes);
 

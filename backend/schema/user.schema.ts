@@ -1,4 +1,4 @@
-import { object, string, boolean } from "zod";
+import { z, object, string, boolean } from "zod";
 
 const userPayload = {
   body: object({
@@ -16,3 +16,17 @@ const userPayload = {
 export const createUserSchema = object({
   ...userPayload,
 });
+
+export const loginUserSchema = object({
+  body: object({
+    password: string({ required_error: "The password is required" }).min(
+      6,
+      "Add 6 characters"
+    ),
+    email: string({ required_error: "The email is required" }).email(
+      "Please enter your email address"
+    ),
+  }),
+});
+
+export type UserType = z.infer<typeof userPayload.body>;
