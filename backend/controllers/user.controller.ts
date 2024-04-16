@@ -3,17 +3,18 @@ import { asyncHandler } from "../middlewares/asyncHandler";
 import {
   createUser,
   findUserByEmail,
-  getUserByEmail,
+  findUserById,
+  findUserByIdAndDelete,
+  getAllUsers,
 } from "../services/user.service";
-import { createToken } from "../utils/token";
 import { comparePasswords } from "../utils/comparePasswords";
-import { verify } from "crypto";
+import { createToken } from "../utils/token";
 
 export const createUserHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const { username, password, email } = req.body;
 
-    const isUserExist = await getUserByEmail(email);
+    const isUserExist = await findUserByEmail(email);
 
     if (isUserExist) {
       res.json({ message: "Sorry but this Email is already in use" });
@@ -48,13 +49,11 @@ export const loginUserHandler = asyncHandler(
     const { email, password } = req.body;
 
     const user = await findUserByEmail(email);
-
     if (!user) {
       return res.json({ message: "Please enter valid credentials" });
     }
 
     const isPasswordsValid = await comparePasswords(password, user.password);
-
     if (!isPasswordsValid) {
       return res.json({ message: "Please enter valid credentials" });
     }
@@ -75,8 +74,7 @@ export const loginUserHandler = asyncHandler(
     res.cookie("verifyToken", verifyToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
-      // maxAge: 60 * 15 * 1000,
-      maxAge: 1,
+      maxAge: 60 * 15 * 1000,
       sameSite: "strict",
     });
     res.cookie("refreshToken", refreshToken, {
@@ -100,5 +98,89 @@ export const logoutHandler = asyncHandler(
       maxAge: -1,
     });
     res.json({ message: "Log out successfully" });
+  }
+);
+
+export const getAllUsersHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const users = await getAllUsers();
+    res.json({ numberOfUsers: users.length, data: users });
+  }
+);
+
+export const meHandler = asyncHandler(async (req: Request, res: Response) => {
+  return res.json({ data: res.locals.user });
+});
+
+export const updateMeHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { username, email } = req.body;
+    let user = res.locals.user;
+
+    if (username) {
+      user.username = username;
+    }
+    if (email) {
+      user.email = email;
+    }
+    await user.save();
+    res.json({
+      message: "Update user successfully",
+      data: { username: user.username, email: user.email },
+    });
+  }
+);
+
+export const deleteUserHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const user = await findUserByIdAndDelete(id);
+    if (!user) {
+      return res.json({ message: "There is no user with that id" });
+    }
+
+    return res.json({ message: "The use has been deleted" });
+  }
+);
+
+export const getUserByIdHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const user = await findUserById(id);
+    if (!user) {
+      return res.json({ message: "There is no user with that id" });
+    }
+
+    return res.json({
+      message: "Find a user",
+      data: {
+        username: user.username,
+        email: user.email,
+      },
+    });
+  }
+);
+export const updateUserHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { username, email } = req.body;
+    let user = await findUserById(id);
+    if (!user) {
+      return res.json({ message: "There is no user with that id" });
+    }
+    if (username) {
+      user.username = username;
+    }
+    if (email) {
+      user.email = email;
+    }
+    await user.save();
+    return res.json({
+      message: "Updated the user",
+      data: {
+        username: user.username,
+        email: user.email,
+      },
+    });
   }
 );

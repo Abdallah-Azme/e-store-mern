@@ -8,7 +8,6 @@ export const serializeUser = (
 ) => {
   const accessToken = req.cookies.verifyToken;
   const refreshToken = req.cookies.refreshToken;
-  console.log({ accessToken }, { refreshToken });
 
   // check if there is any token
   if (!accessToken && !refreshToken) {
@@ -17,7 +16,6 @@ export const serializeUser = (
   }
 
   const { decoded, expired } = verifyToken(accessToken);
-  console.log({ expired });
   // there is an access token and it still valid alhmdllah
   if (decoded) {
     res.locals.user = decoded;
@@ -26,13 +24,10 @@ export const serializeUser = (
 
   // the token is expired but there is a refresh token so gonna check if the refresh token is valid if so gonna reissue an access token
   if (!expired && refreshToken) {
-    console.log({ refreshToken });
     try {
       const { decoded } = verifyToken(refreshToken);
-      console.log({ decoded });
       //@ts-ignore
       if (decoded && decoded.id) {
-        console.log("inside the if check");
         const newAccessToken = createToken(
           //@ts-ignore
           { id: decoded.id },
@@ -40,6 +35,7 @@ export const serializeUser = (
             expiresIn: "15m",
           }
         );
+        const x = verifyToken(newAccessToken);
         res.cookie("verifyToken", newAccessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV !== "development",
@@ -47,7 +43,6 @@ export const serializeUser = (
           sameSite: "strict",
         });
         res.locals.user = decoded;
-        console.log(decoded);
       }
     } catch (error) {
       next();
