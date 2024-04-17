@@ -32,7 +32,7 @@ userRoutes
   .post(validator(createUserSchema), createUserHandler)
   .get(requireUser, authorized, getAllUsersHandler);
 
-userRoutes.route("/login").post(validator(loginUserSchema), loginUserHandler);
+userRoutes.route("/auth").post(validator(loginUserSchema), loginUserHandler);
 userRoutes.route("/logout").get(requireUser, logoutHandler);
 userRoutes
   .route("/:id")

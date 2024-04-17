@@ -83,7 +83,13 @@ export const loginUserHandler = asyncHandler(
       maxAge: 60 * 60 * 1000 * 24 * 365,
       sameSite: "strict",
     });
-    res.json({ message: "User log in successfully" });
+    res.json({
+      message: "User log in successfully",
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
   }
 );
 
