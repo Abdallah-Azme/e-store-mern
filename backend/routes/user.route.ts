@@ -23,7 +23,7 @@ import { authorized } from "../middlewares/authorized";
 const userRoutes = express.Router();
 
 userRoutes
-  .route("/me")
+  .route("/profile")
   .get(requireUser, meHandler)
   .put(requireUser, validator(updateUserSchema), updateMeHandler);
 

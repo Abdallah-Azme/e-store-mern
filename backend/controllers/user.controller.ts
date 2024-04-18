@@ -39,7 +39,10 @@ export const createUserHandler = asyncHandler(
     });
     res.status(201).json({
       message: "Created user successfully",
-      data: { username: username.username, email: user.email },
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
     });
   }
 );
@@ -110,7 +113,7 @@ export const logoutHandler = asyncHandler(
 export const getAllUsersHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const users = await getAllUsers();
-    res.json({ numberOfUsers: users.length, data: users });
+    res.json(users);
   }
 );
 
@@ -132,7 +135,10 @@ export const updateMeHandler = asyncHandler(
     await user.save();
     res.json({
       message: "Update user successfully",
-      data: { username: user.username, email: user.email },
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
     });
   }
 );
