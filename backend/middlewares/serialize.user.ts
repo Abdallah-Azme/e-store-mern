@@ -18,7 +18,7 @@ export const serializeUser = (
   const { decoded, expired } = verifyToken(accessToken);
   // there is an access token and it still valid alhmdllah
   if (decoded) {
-    res.locals.user = decoded;
+    res.locals.decoded = decoded;
     return next();
   }
 
@@ -42,7 +42,7 @@ export const serializeUser = (
           maxAge: 60 * 15 * 1000,
           sameSite: "strict",
         });
-        res.locals.user = decoded;
+        res.locals.decoded = decoded;
       }
     } catch (error) {
       next();

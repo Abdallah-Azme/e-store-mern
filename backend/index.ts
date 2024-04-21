@@ -6,6 +6,7 @@ import userRoutes from "./routes/user.route";
 import { error } from "./middlewares/error";
 import { notFound } from "./middlewares/notFound";
 import { serializeUser } from "./middlewares/serialize.user";
+import { categoryRoutes } from "./routes/category.route";
 config();
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use(serializeUser);
 
 app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.use("*", notFound);
 app.use("*", error);

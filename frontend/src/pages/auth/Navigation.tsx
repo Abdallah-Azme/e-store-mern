@@ -33,7 +33,6 @@ const Navigation = () => {
   const [logoutApiCall] = useLogoutMutation();
 
   const logoutHandler = async () => {
-    console.log("logged out");
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());

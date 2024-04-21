@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { findUser } from "../services/user.service";
+import { findUser, findUserById } from "../services/user.service";
 
 export const authorized = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const id = res.locals.user;
-  const user = await findUser(id);
+  const { id } = res.locals.decoded;
+  const user = await findUserById(id);
   if (!user) {
     return res.status(401).json({ message: "You need to be logged in" });
   }

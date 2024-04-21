@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { z, object, string, boolean, isValid } from "zod";
+import { object, string, z } from "zod";
 
 const userPayload = {
   body: object({

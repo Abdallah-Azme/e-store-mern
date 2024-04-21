@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { findUser } from "../services/user.service";
+import { findUser, findUserById } from "../services/user.service";
 
 export const requireUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  if (res.locals.user) {
-    const user = await findUser({ _id: res.locals.user });
+  if (res.locals.decoded) {
+    const user = await findUserById(res.locals.decoded.id);
     if (user) {
       res.locals.user = user;
       return next();

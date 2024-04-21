@@ -19,7 +19,7 @@ const UserList = () => {
 
   const [deleteUser] = useDeleteUserMutation();
 
-  const [editableUserId, setEditableUserId] = useState(null);
+  const [editableUserId, setEditableUserId] = useState<null | string>(null);
   const [editableUserName, setEditableUserName] = useState("");
   const [editableUserEmail, setEditableUserEmail] = useState("");
 
@@ -29,24 +29,24 @@ const UserList = () => {
     refetch();
   }, [refetch]);
 
-  const deleteHandler = async (id) => {
+  const deleteHandler = async (id: string) => {
     if (window.confirm("Are you sure")) {
       try {
         await deleteUser(id);
         refetch();
-      } catch (err) {
+      } catch (err: any) {
         toast.error(err?.data?.message || err.error);
       }
     }
   };
 
-  const toggleEdit = (id, username, email) => {
+  const toggleEdit = (id: string, username: string, email: string) => {
     setEditableUserId(id);
     setEditableUserName(username);
     setEditableUserEmail(email);
   };
 
-  const updateHandler = async (id) => {
+  const updateHandler = async (id: string) => {
     try {
       await updateUser({
         userId: id,
@@ -55,7 +55,7 @@ const UserList = () => {
       });
       setEditableUserId(null);
       refetch();
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err?.data?.message || err.error);
     }
   };
@@ -136,7 +136,7 @@ const UserList = () => {
                         <a href={`mailto:${user.email}`}>{user.email}</a>{" "}
                         <button
                           onClick={() =>
-                            toggleEdit(user._id, user.name, user.email)
+                            toggleEdit(user._id, user.username, user.email)
                           }
                         >
                           <FaEdit className="ml-[1rem]" />
