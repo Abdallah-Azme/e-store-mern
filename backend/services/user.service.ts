@@ -1,5 +1,5 @@
 import { Query } from "mongoose";
-import { User } from "../modles/user.model";
+import { User } from "../model/user.model";
 import { UserType } from "../schema/user.schema";
 
 export const createUser = ({ username, email, password }: UserType) => {

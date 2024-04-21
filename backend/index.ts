@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(serializeUser);
 
 app.use("/api/users", userRoutes);
-app.use("/api/categories", categoryRoutes);
+app.use("/api/category", categoryRoutes);
 
 app.use("*", notFound);
 app.use("*", error);
